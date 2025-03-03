@@ -1,5 +1,7 @@
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 
 information = """
     Elon Reeve Musk (/ˈiːlɒn/ EE-lon; born June 28, 1971) is a businessman known for his key roles in Tesla, Inc., SpaceX, and Twitter (which he rebranded as X). Since 2025, he has been a senior advisor to United States president Donald Trump and de facto head of the Department of Government Efficiency (DOGE). Musk is the wealthiest person in the world; as of February 2025, Forbes estimates his net worth to be US$353 billion.
@@ -22,10 +24,11 @@ if __name__ == "__main__":
 
     summery_prompt_template = PromptTemplate(input_variables=["information"], template=summary_template)
 
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    llm = ChatOllama(model="llama3.2")
 
     # 파이프 연산자(|)를 통해, summary template은 llm으로 전달된다.
-    chain = summery_prompt_template | llm
+    chain = summery_prompt_template | llm | StrOutputParser()
 
     res = chain.invoke(input={"information": information})
 
